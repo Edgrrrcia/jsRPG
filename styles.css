@@ -1,5 +1,5 @@
 body {
-  background-color: #0a0a23;
+  background-color: #663333;
 }
 
 #text {
@@ -42,4 +42,27 @@ button {
   background-color: #feac32;
   background-image: linear-gradient(#fecc4c, #ffac33);
   border: 3px solid #feac32;
+}
+
+#gameArea {
+
+}
+
+#knight {
+  width: 192px;
+  height: 192px;
+  background-size: cover;
+  background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/afb473a63cca38d72163e098b28ed001f9feb363/knight1.png');
+  background-repeat: no-repeat;
+  margin: -15em auto 8em;
+}
+
+#background {
+  width: 500px;
+  height: 500px;
+  background-size: cover;
+  background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/townsquare.png');
+  background-repeat: no-repeat;
+  margin: 30px auto 0px;
+  padding: 10px;
 }
