@@ -1,399 +1,488 @@
-body {
-  background-color: #663333;
-  font-family: 'PressStart2PRegular';
-  font-weight: normal;
-  font-style: normal;
-}
+let xp = 0;
+let health = 100;
+let gold = 2000;
+let currentWeapon = 0;
+let fighting;
+let monsterHealth;
+let inventory = ["stick"];
 
-#text {
-  background-color: #0a0a23;
-  color: #ffffff;
-  padding: 15px;
-  line-height: 1.2;
-  font-size: 10px;
-}
-
-#game {
-  max-width: 500px;
-  max-height: 400px;
-  background-color: #ffffff;
-  color: #ffffff;
-  margin: 30px auto 0px;
-  padding: 10px;
-}
-
-#controls,
-#stats {
-  border: 1px solid #0a0a23;
-  padding: 5px;
-  color: #0a0a23;
-}
-
-#controls {
-  margin: auto;
-}
-
-#monsterStats {
-  display: none;
-  border: 1px solid #0a0a23;
-  padding: 5px;
-  color: #ffffff;
-  background-color: #c70d0d;
-}
-
-.stat {
-  padding-right: 10px;
-}
-
-button {
-  cursor: pointer;
-  color: #0a0a23;
-  background-color: #feac32;
-  background-image: linear-gradient(#fecc4c, #ffac33);
-  border: 3px solid #feac32;
-}
-
-
-#knight {
-  width: 192px;
-  height: 192px;
-  background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/afb473a63cca38d72163e098b28ed001f9feb363/knight1.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  margin: 15em auto;
-}
-
-#other {
-  display: none;
-  width: 192px;
-  height: 192px;
-  background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/afb473a63cca38d72163e098b28ed001f9feb363/slime.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  margin: -25em auto;
-}
-
-#background {
-  width: 500px;
-  height: 500px;
-  background-size: cover;
-  background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/townSquare.png');
-  background-repeat: no-repeat;
-  margin: 30px auto 0px;
-  padding: 10px;
-}
-
-#knightDmg {
-    margin-left: 2em;
-}
-
-#otherDmg {
-    margin-left: 3em;
-}
-
-.dmg {
-  color: #F50D37;
-  text-shadow: 2px 2px #292525;
-  font-size: 30px;
-  font-family: fantasy;
-  display:none;
-}
-
-.menu-item:hover:after {
-  position: absolute;
-  content: attr(title);
-  display: inline-block;
-  left: 20px;
-  top: 20px;
-  width: 11em;
-  background-color:rgba(0, 0, 0, 0.5);
-  font-size: 15px;
-  line-height: 1.4;
-  margin-left: -14em;
-  margin-top: -1.5em;
-  padding: 10px;
-}
-
-@-webkit-keyframes text-pop-up-top {
-  0% {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-    text-shadow: none;
+const button1 = document.querySelector('#button1');
+const button2 = document.querySelector("#button2");
+const button3 = document.querySelector("#button3");
+const text = document.querySelector("#text");
+const xpText = document.querySelector("#xpText");
+const healthText = document.querySelector("#healthText");
+const goldText = document.querySelector("#goldText");
+const knightImg = document.querySelector("#knight");
+const backgroundImg = document.querySelector("#background");
+const otherImg = document.querySelector("#other");
+const knightDmg = document.querySelector("#knightDmg");
+const otherDmg = document.querySelector("#otherDmg");
+const monsterStats = document.querySelector("#monsterStats");
+const monsterName = document.querySelector("#monsterName");
+const monsterHealthText = document.querySelector("#monsterHealth");
+const weapons = [
+  { name: 'stick', power: 5 },
+  { name: 'dagger', power: 30 },
+  { name: 'claw hammer', power: 50 },
+  { name: 'sword', power: 100 }
+];
+const monsters = [
+  {
+    name: "Slime",
+    level: 2,
+    health: 15
+  },
+  {
+    name: "Fanged Beast",
+    level: 8,
+    health: 60
+  },
+  {
+    name: "Dragon",
+    level: 20,
+    health: 300
   }
-  100% {
-    -webkit-transform: translateY(-50px);
-    transform: translateY(-50px);
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-    text-shadow: 0 1px 0 #cccccc, 0 2px 0 #cccccc, 0 3px 0 #cccccc,
-      0 4px 0 #cccccc, 0 5px 0 #cccccc, 0 6px 0 #cccccc, 0 7px 0 #cccccc,
-      0 8px 0 #cccccc, 0 9px 0 #cccccc, 0 50px 30px rgba(0, 0, 0, 0.3);
+]
+const stickimg = document.querySelector(".menu-item:nth-child(6)");
+const stickimg2 = document.querySelector(".purple");
+
+const daggerimg = document.querySelector(".menu-item:nth-child(7)");
+const daggerimg2 = document.querySelector(".orange");
+
+const clawimg = document.querySelector(".menu-item:nth-child(8)");
+const clawimg2 = document.querySelector(".lightblue");
+
+const swordimg = document.querySelector(".menu-item:nth-child(3)");
+const swordimg2 = document.querySelector(".blue");
+
+const locations = [
+  {
+    name: "town square",
+    "button text": ["Go to store", "Go to cave", "Fight dragon"],
+    "button functions": [goStore, goCave, fightDragon],
+    text: "You are in the town square. You see a sign that says \"Store\". On the side, you see the pathway outside the city walls."
+  },
+  {
+    name: "store",
+    "button text": ["Buy 10 health (10 gold)", "Buy weapon (30 gold)", "Go to town square"],
+    "button functions": [buyHealth, buyWeapon, goTown],
+    text: "You enter the store."
+  },
+  {
+    name: "cave",
+    "button text": ["Fight slime", "Fight fanged beast", "Go to town square"],
+    "button functions": [fightSlime, fightBeast, goTown],
+    text: "You enter the cave. You see some monsters."
+  },
+  {
+    name: "fight",
+    "button text": ["Attack", "Dodge", "Run back to Town"],
+    "button functions": [attack, dodge, goTown],
+    text: "You are engaged in battle."
+  },
+  {
+    name: "kill monster",
+    "button text": ["Go to town square", "Go to town square", "Go to town square"],
+    "button functions": [goTown, goTown, easterEgg],
+    text: 'The monster screams "Arg!" as it dies. You gain experience points and find gold.'
+  },
+  {
+    name: "lose",
+    "button text": ["REPLAY?", "REPLAY?", "REPLAY?"],
+    "button functions": [restart, restart, restart],
+    text: "You died. ☠️"
+  },
+  {
+    name: "win",
+    "button text": ["REPLAY?", "REPLAY?", "REPLAY?"],
+    "button functions": [restart, restart, restart],
+    text: "You defeated the dragon! YOU WIN THE GAME! 🎉"
+  },
+  {
+    name: "easter egg",
+    "button text": ["2", "8", "Go to town square?"],
+    "button functions": [pickTwo, pickEight, goTown],
+    text: "You find a secret room and stumble upon a game on the table. You feel a sudden urge to pick a number above. Ten numbers will be randomly chosen between 0 and 10. If the number you choose matches one of the random numbers, you win!"
   }
+];
+
+// initialize buttons
+button1.onclick = goStore;
+button2.onclick = goCave;
+button3.onclick = fightDragon;
+
+function update(location) {
+  monsterStats.style.display = "none";
+  button1.innerText = location["button text"][0];
+  button2.innerText = location["button text"][1];
+  button3.innerText = location["button text"][2];
+  button1.onclick = location["button functions"][0];
+  button2.onclick = location["button functions"][1];
+  button3.onclick = location["button functions"][2];
+  text.innerText = location.text;
 }
-@keyframes text-pop-up-top {
-  0% {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-    text-shadow: none;
-  }
-  100% {
-    color:#FFF;
-    -webkit-transform: translateY(-50px);
-    transform: translateY(-50px);
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-    text-shadow: 0 1px 0 #cccccc, 0 2px 0 #cccccc, 0 3px 0 #cccccc,
-      0 4px 0 #cccccc, 0 5px 0 #cccccc, 0 6px 0 #cccccc, 0 7px 0 #cccccc,
-      0 8px 0 #cccccc, 0 9px 0 #cccccc, 0 50px 30px rgba(0, 0, 0, 0.3);
+
+function refreshKnight() {
+  knightImg.style.margin = "15em auto";
+  knightImg.style.backgroundPosition = "top 0 bottom 0 left 0 right 0";
+  knightImg.style.padding = "0";
+}
+
+function refreshOther() {
+  otherImg.style.margin = "-25em auto";
+  otherImg.style.backgroundPosition = "top 0 bottom 0 left 0 right 0";
+  otherImg.style.padding = "0";
+}
+
+function goTown() {
+  update(locations[0]);
+  clearDodge();
+  refreshKnight();
+  refreshOther();
+  clearDmg();
+  backgroundImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/townSquare.png')";
+  otherImg.style.display = "none";
+  if (weapons["name"] === "sword") {
+    button2.innerText = "You have all the weapons";
   }
 }
 
-#miss{
-  position: absolute;
-  top:50%;
-  left:50%;
-  transform:translate3d(-50%,-50%,0);
+function goStore() {
+  update(locations[1]);
+  refreshKnight()
+  refreshOther();
+  shopKeeper();
 
-  font-family: 'Bitter', serif;
-  animation: text-pop-up-top 2.5s 3 both  alternate;
-  font-size:30px;
-  color:#e0e0e0;
-  backface-visibility:hidden;
+  backgroundImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/shop.jpg')";
+  knightImg.style.marginLeft = "7.5em";
+  knightImg.style.marginTop = "18em";
+}
 
-  display: inline-block;
-  &:nth-child(4n +1){
+function shopKeeper() {
+  otherImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/shopekeeper.png')";
+  otherImg.style.display = "block";
+  otherImg.style.marginRight = "5.5em";
+}
+
+function goCave() {
+  update(locations[2]);
+  refreshKnight()
+  refreshOther();
+  backgroundImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/cave1.png')";
+  knightImg.style.marginLeft = "100px";
+  knightImg.style.marginTop = "17em";
+}
+
+function buyHealth() {
+  if (gold >= 10) {
+    gold -= 10;
+    health += 10;
+    goldText.innerText = gold;
+    healthText.innerText = health;
+  } else {
+    text.innerText = "You do not have enough gold to buy health.";
+  }
+}
+
+function buyWeapon() {
+  if (currentWeapon < weapons.length - 1) {
+    if (gold >= 30) {
+      gold -= 30;
+      currentWeapon++;
+      goldText.innerText = gold;
+      let newWeapon = weapons[currentWeapon].name;
+      text.innerText = "You now have a " + newWeapon + ".";
+      inventory.push(newWeapon);
+      text.innerText += " In your inventory you have: " + inventory;
+      if (weapons[currentWeapon].name === "dagger") {
+        daggerimg.style.visibility = "visible";
+        daggerimg2.style.visibility = "visible";
+        console.log("dagger")
+      }
+      if (weapons[currentWeapon].name === "claw hammer") {
+        knightImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/knight2.png')";
+        clawimg.style.visibility = "visible";
+        clawimg2.style.visibility = "visible";
+        console.log("claw");
+      }
+      if (weapons[currentWeapon].name === "sword") {
+        knightImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/knight3.png')";
+        swordimg.style.visibility = "visible";
+        swordimg2.style.visibility = "visible";
+        console.log("sword");
+      }
+    } else {
+      text.innerText = "You do not have enough gold to buy a weapon.";
+
+    }
+  } else {
+    text.innerText = "You already have the most powerful weapon!";
+    button2.innerText = "Sell weapon for 15 gold";
+    button2.onclick = sellWeapon;
+  }
+}
+
+
+function sellWeapon() {
+  if (inventory.length > 1) {
+    gold += 15;
+    goldText.innerText = gold;
+    let currentWeapon = inventory.shift();
+    text.innerText = "You sold a " + currentWeapon + ".";
+    text.innerText += " In your inventory you have: " + inventory;
+    if (currentWeapon === "stick") {
+      stickimg.style.visibility = "hidden";
+      stickimg2.style.visibility = "hidden";
+      console.log("sell stick")
+    }
+    if (currentWeapon === "dagger") {
+      daggerimg.style.visibility = "hidden";
+      daggerimg2.style.visibility = "hidden";
+      console.log("sell dagger")
+    }
+
+    if (currentWeapon === "claw hammer") {
+      clawimg.style.visibility = "hidden";
+      clawimg2.style.visibility = "hidden";
+      console.log("sell dagger")
+    }
 
   }
-  &:nth-child(4n +2){
-    //animation-delay:0.15s;
-  }
-  &:nth-child(4n +3){
-    //animation-delay:0.3s;
-  }
-  &:nth-child(4n +4){
-    //animation-delay:0.45s;
+  else {
+    text.innerText = "Don't sell your only weapon!";
   }
 }
 
+function fightSlime() {
+  fighting = 0;
+  goFight();
+  refreshKnight();
+  refreshOther();
+  knightImg.style.marginLeft = "5em";
+  knightImg.style.marginTop = "6.3em";
 
-
-.menu-item,
-.menu-open-button {
-   background: #E04828;
-   border-radius: 100%;
-   width: 60px;
-   height: 60px;
-   margin-left: -40px;
-   position: absolute;
-   color: #FFFFFF;
-   text-align: center;
-   line-height: 80px;
-   -webkit-transform: translate3d(0, 0, 0);
-   transform: translate3d(0, 0, 0);
-   -webkit-transition: -webkit-transform ease-out 200ms;
-   transition: -webkit-transform ease-out 200ms;
-   transition: transform ease-out 200ms;
-   transition: transform ease-out 200ms, -webkit-transform ease-out 200ms;
+  otherImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/slime.png')";
+  otherImg.style.display = "block";
+  otherImg.style.marginTop = "-24em";
+  otherImg.style.marginRight = "5.5em";
 }
 
-.menu-open {
-   display: none;
+function fightBeast() {
+  fighting = 1;
+  goFight();
+  refreshKnight();
+  refreshOther();
+  backgroundImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/cave2.png')";
+  knightImg.style.marginTop = "2em";
+  knightImg.style.marginLeft = "3em";
+  otherImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/fangedbeast.png')";
+  otherImg.style.display = "block";
+  otherImg.style.marginTop = "-31.5em";
+  otherImg.style.marginRight = "2.5em";
+  otherImg.style.padding = "3em";
 }
 
-.lines {
-   width: 25px;
-   height: 3px;
-   background: #FFFFFF;
-   display: block;
-   position: absolute;
-   top: 50%;
-   left: 50%;
-   margin-left: -12.5px;
-   margin-top: -1.5px;
-   -webkit-transition: -webkit-transform 200ms;
-   transition: -webkit-transform 200ms;
-   transition: transform 200ms;
-   transition: transform 200ms, -webkit-transform 200ms;
+function fightDragon() {
+  fighting = 2;
+  goFight();
+  clearDodge();
+  refreshKnight();
+  refreshOther();
+  backgroundImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/cave3.png')";
+  knightImg.style.marginTop = "7em";
+  knightImg.style.marginLeft = "2em";
+  otherImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/dragon.png')"
+  otherImg.style.display = "block";
+  otherImg.style.padding = "5em";
+  otherImg.style.marginTop =  "-35em";
+  otherImg.style.marginLeft = "9em";
 }
 
-.line-1 {
-   -webkit-transform: translate3d(0, -8px, 0);
-   transform: translate3d(0, -8px, 0);
+function goFight() {
+  update(locations[3]);
+  monsterHealth = monsters[fighting].health;
+  monsterStats.style.display = "block";
+  monsterName.innerText = monsters[fighting].name;
+  monsterHealthText.innerText = monsterHealth;
 }
 
-.line-2 {
-   -webkit-transform: translate3d(0, 0, 0);
-   transform: translate3d(0, 0, 0);
+function attack() {
+  clearDodge();
+  text.innerText = "The " + monsters[fighting].name + " attacks.";
+  text.innerText += " You attack it with your " + weapons[currentWeapon].name + ".";
+  let val = getMonsterAttackValue(monsters[fighting].level);
+  health -= val;
+  knightDmg.innerText = "-" + val;
+  knightDmg.style.display = "block";
+  if (isMonsterHit()) {
+    let val = weapons[currentWeapon].power + Math.floor(Math.random() * xp) + 1;
+    monsterHealth -= val;
+    otherDmg.innerText = "-" + val;
+    otherDmg.style.display = "block";
+  } else {
+    miss();
+    dodgeMiss.style.marginLeft = "50px";
+    text.innerText += " You miss.";
+  }
+  healthText.innerText = health;
+  monsterHealthText.innerText = monsterHealth;
+  if (health <= 0) {
+    lose();
+  } else if (monsterHealth <= 0) {
+    fighting === 2 ? winGame() : defeatMonster();
+  }
+  if (Math.random() <= .1 && inventory.length !== 1) {
+    let brokenWeapon = inventory.pop();
+    text.innerText += " Your " + brokenWeapon + " breaks.";
+    currentWeapon--;
+    if (brokenWeapon === "dagger") {
+      daggerimg.style.visibility = "hidden";
+      daggerimg2.style.visibility = "hidden";
+      console.log("broken dagger")
+    }
+    if (brokenWeapon === "claw hammer") {
+      clawimg.style.visibility = "hidden";
+      clawimg2.style.visibility = "hidden";
+      console.log("broken dagger")
+    }
+    if (brokenWeapon === "sword") {
+      swordimg.style.visibility = "hidden";
+      swordimg2.style.visibility = "hidden";
+      console.log("broken sword")
+    }
+  }
 }
 
-.line-3 {
-   -webkit-transform: translate3d(0, 8px, 0);
-   transform: translate3d(0, 8px, 0);
+function clearDmg() {
+  knightDmg.style.display = "none";
+  otherDmg.style.display = "none";
+  knightDmg.style.color = "#F50D37";
+  otherDmg.style.color = "#F50D37";
 }
 
-.menu-open:checked + .menu-open-button .line-1 {
-   -webkit-transform: translate3d(0, 0, 0) rotate(45deg);
-   transform: translate3d(0, 0, 0) rotate(45deg);
+function getMonsterAttackValue(level) {
+  const hit = (level * 5) - (Math.floor(Math.random() * xp));
+  console.log(hit);
+  return hit > 0 ? hit : 0;
 }
 
-.menu-open:checked + .menu-open-button .line-2 {
-   -webkit-transform: translate3d(0, 0, 0) scale(0.1, 1);
-   transform: translate3d(0, 0, 0) scale(0.1, 1);
+function isMonsterHit() {
+  return Math.random() > .2 || health < 20;
 }
 
-.menu-open:checked + .menu-open-button .line-3 {
-   -webkit-transform: translate3d(0, 0, 0) rotate(-45deg);
-   transform: translate3d(0, 0, 0) rotate(-45deg);
+function dodge() {
+  clearDmg()
+  dodgeMiss.style.marginLeft = "-100px";
+  miss();
+  text.innerText = "You dodge the attack from the " + monsters[fighting].name;
 }
 
-.menu {
-   margin: auto;
-   position: absolute;
-   top: .5em;
-   bottom: 0;
-   left: 16em;
-   right: 0;
-   width: 50px;
-   height: 50px;
-   text-align: center;
-   box-sizing: border-box;
-   font-size: 26px;
+function clearDodge() {
+  dodgeMiss.style.display = "none";
 }
 
+//Miss mechanic
+const dodgeMiss = document.querySelector("#miss");
+const dodgeInterval = 0.25;
 
-/* .menu-item {
-   transition: all 0.1s ease 0s;
-} */
-
-.menu-item:hover {
-  cursor: default;
+for(let i = 1; i < dodgeMiss.length; i++){
+  dodgeMiss[i].style.animationDelay = i * dodgeInterval + "s";
 }
 
-
-.menu-open-button {
-   z-index: 2;
-    -webkit-transition-duration: 400ms;
-   transition-duration: 400ms;
-   -webkit-transform: scale(1.1, 1.1) translate3d(0, 0, 0);
-   transform: scale(1.1, 1.1) translate3d(0, 0, 0);
-   cursor: pointer;
-   box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.14);
+function miss() {
+  otherDmg.style.display = "none";
+  dodgeMiss.style.display = "block";
 }
 
-.menu-open-button:hover {
-   -webkit-transform: scale(1.2, 1.2) translate3d(0, 0, 0);
-   transform: scale(1.2, 1.2) translate3d(0, 0, 0);
+function defeatMonster() {
+  let goldIncome = Math.floor(monsters[fighting].level * 6.7);
+  gold += goldIncome;
+  let xpIncome = monsters[fighting].level;
+  xp += xpIncome;
+  goldText.innerText = gold;
+  xpText.innerText = xp;
+  knightDmg.style.color = "#A2C6F5";
+  knightDmg.innerText = "+" + goldIncome + " xp";
+  otherDmg.style.color = "#F2D83D";
+  otherDmg.innerText = "+" + xpIncome + " gold";
+  update(locations[4]);
 }
 
-
-.menu-open:checked ~ .menu-item {
-   -webkit-transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
-   transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
+function lose() {
+  clearDodge();
+  update(locations[5]);
+  backgroundImg.style.opacity = 0.7;
 }
 
-/* blue */
-.menu-open:checked ~ .menu-item:nth-child(3) {
-    visibility: hidden;
-   transition-duration: 180ms;
-   -webkit-transition-duration: 180ms;
-   -webkit-transform: translate3d(0.08361px, -90.99997px, 0);
-   transform: translate3d(0.08361px, -90.99997px, 0);
+function winGame() {
+  clearDodge();
+  update(locations[6]);
+  clearDmg();
 }
 
-
-
-/* purple */
-.menu-open:checked ~ .menu-item:nth-child(6) {
-   transition-duration: 480ms;
-   -webkit-transition-duration: 480ms;
-   -webkit-transform: translate3d(0.0836px, 90.99997px, 0);
-   transform: translate3d(0.08361px, 90.99997px, 0);
+function restart() {
+  xp = 0;
+  health = 100;
+  gold = 50;
+  currentWeapon = 0;
+  inventory = ["stick"];
+  goldText.innerText = gold;
+  healthText.innerText = health;
+  xpText.innerText = xp;
+  backgroundImg.style.opacity = 1;
+  refreshOther();
+  clearDmg();
+  goTown();
+  knightImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/knight1.png')";
+    daggerimg.style.visibility = "hidden";
+    daggerimg2.style.visibility = "hidden";
+    clawimg.style.visibility = "hidden";
+    clawimg2.style.visibility = "hidden";
+    swordimg.style.visibility = "hidden";
+    swordimg2.style.visibility = "hidden";
+    stickimg.style.visibility = "visible";
+    stickimg2.style.visibility = "visible";
 }
 
-/* orange */
-.menu-open:checked ~ .menu-item:nth-child(7) {
-  visibility: hidden;
-   transition-duration: 580ms;
-   -webkit-transition-duration: 580ms;
-   -webkit-transform: translate3d(-90.86291px, 62.62064px, 0);
-   transform: translate3d(-90.86291px, 62.62064px, 0);
+function easterEgg() {
+  update(locations[7]);
+  backgroundImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/easterEgg.png')";
+  clearDmg();
+  refreshKnight();
+  refreshOther();
+  knightImg.style.marginTop = "13em";
+  knightImg.style.marginRight = "15em";
+  otherImg.style.display = "none";
 }
 
-/* LIGHT BLUE */
-.menu-open:checked ~ .menu-item:nth-child(8) {
-  visibility: hidden;
-   transition-duration: 680ms;
-   -webkit-transition-duration: 680ms;
-   -webkit-transform: translate3d(-91.03006px, -42.33095px, 0);
-   transform: translate3d(-91.03006px, -42.33095px, 0);
+function pickTwo() {
+  pick(2);
 }
 
-
-.blue {
-  visibility: hidden;
-   background-color: #669AE1;
-   background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/sword.png');
-   background-size: 40px;
-   background-position: center;
-   background-repeat: no-repeat;
-   box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.14);
-   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.12);
+function pickEight() {
+  pick(8);
 }
 
-.blue:hover {
-   color: #669AE1;
-   text-shadow: none;
-}
-
-.purple {
-   background-color: #C49CDE;
-   background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/stick.png');
-   background-size: 40px;
-   background-position: center;
-   background-repeat: no-repeat;
-   box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.14);
-   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.12);
-}
-
-.purple:hover {
-   color: #C49CDE;
-   text-shadow: none;
-}
-
-.orange {
-  visibility: hidden;
-   background-color: #FC913A;
-   background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/dagger.png');
-   background-size: 40px;
-   background-position: center;
-   background-repeat: no-repeat;
-   box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.14);
-   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.12);
-}
-
-.orange:hover {
-   color: #FC913A;
-   text-shadow: none;
-}
-
-.lightblue {
-  visibility: hidden;
-   background-color: #62C2E4;
-   background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/claw-hammer.png');
-   background-size: 40px;
-   background-position: center;
-   background-repeat: no-repeat;
-   box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.14);
-   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.12);
-}
-
-.lightblue:hover {
-   color: #62C2E4;
-   text-shadow: none;
+function pick(guess) {
+  const numbers = [];
+  while (numbers.length < 10) {
+    numbers.push(Math.floor(Math.random() * 11));
+  }
+  text.innerText = "You picked " + guess + ". Here are the random numbers:\n";
+  for (let i = 0; i < 10; i++) {
+    text.innerText += numbers[i] + "\n";
+  }
+  if (numbers.includes(guess)) {
+    text.innerText += "Right! You win 20 gold!";
+    gold += 20;
+    goldText.innerText = gold;
+  } else {
+    text.innerText += "Wrong! You lose 10 health!";
+    health -= 10;
+    healthText.innerText = health;
+    if (health <= 0) {
+      lose();
+    }
+  }
 }
