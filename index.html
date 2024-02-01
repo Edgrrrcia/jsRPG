@@ -1,12 +1,19 @@
+<!-- Updated 01/2024 -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="./styles.css">
-    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/press-start-2p" type="text/css"/>
+    <!--Fonts-->
+    <link href='https://fonts.googleapis.com/css?family=Press Start 2P' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@700&display=swap" rel="stylesheet">
+
     <title>RPG - Dragon Repeller</title>
   </head>
   <body>
+    <!-- Inventory -->
     <nav class="menu">
        <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
        <label class="menu-open-button" for="menu-open">
@@ -21,6 +28,7 @@
        <a href="#" class="menu-item orange" title="David's Dagger"></a>
        <a href="#" class="menu-item lightblue" title="Arthurian Claw Hammer"></a>
     </nav>
+  <!-- Game View-->
   <div id="background">
     <div id="knight">
       <h2 id="knightDmg" class="dmg">100</h2>
@@ -28,14 +36,13 @@
     <div id="other">
       <h2 id="otherDmg" class="dmg">100</h2>
     </div>
-  </div>
-
-  <div id="miss" style="display:none;">
-    <div>
-      <span>Miss</span>
+    <div id="miss" style="display:none;">
+      <div>
+        <span>Miss</span>
+      </div>
     </div>
   </div>
-
+<!-- UI -->
   <div id="game">
     <div id="stats">
       <span class="stat">XP: <strong><span id="xpText">0</span></strong></span>
@@ -55,6 +62,8 @@
       Welcome Traveler. You enter the town barely escaping the dragon beyond the walls. You hear from the townfolk that the dragon has been tormenting them for years. You must defeat the dragon that is preventing people from leaving the town. You are in the town square. Where do you want to go? Use the buttons above.
     </div>
   </div>
+  <!--CanvasRendering-->
+  <canvas id="fireworks"></canvas>
     <script src="./script.js"></script>
   </body>
 </html>
