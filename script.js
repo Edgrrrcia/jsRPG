@@ -1,7 +1,7 @@
 //Starter stats
 let xp = 0;
-let health = 10000;
-let gold = 2000;
+let health = 100;
+let gold = 20;
 let currentWeapon = 0;
 let fighting;
 let monsterHealth;
