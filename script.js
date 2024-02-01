@@ -1,11 +1,13 @@
+//Starter stats
 let xp = 0;
-let health = 100;
-let gold = 20;
+let health = 10000;
+let gold = 2000;
 let currentWeapon = 0;
 let fighting;
 let monsterHealth;
 let inventory = ["stick"];
 
+//Global Declaratios
 const button1 = document.querySelector('#button1');
 const button2 = document.querySelector("#button2");
 const button3 = document.querySelector("#button3");
@@ -29,12 +31,12 @@ const weapons = [
 ];
 const monsters = [
   {
-    name: "Slime",
+    name: "Noahmorphous Slime",
     level: 2,
     health: 15
   },
   {
-    name: "Fanged Beast",
+    name: "Vincentaur Beast",
     level: 8,
     health: 60
   },
@@ -44,18 +46,17 @@ const monsters = [
     health: 300
   }
 ]
+//Inventory Images
 const stickimg = document.querySelector(".menu-item:nth-child(6)");
 const stickimg2 = document.querySelector(".purple");
-
 const daggerimg = document.querySelector(".menu-item:nth-child(7)");
 const daggerimg2 = document.querySelector(".orange");
-
 const clawimg = document.querySelector(".menu-item:nth-child(8)");
 const clawimg2 = document.querySelector(".lightblue");
-
 const swordimg = document.querySelector(".menu-item:nth-child(3)");
 const swordimg2 = document.querySelector(".blue");
 
+//Game Locations
 const locations = [
   {
     name: "town square",
@@ -65,7 +66,7 @@ const locations = [
   },
   {
     name: "store",
-    "button text": ["Buy 10 health (10 gold)", "Buy weapon (30 gold)", "Go to town square"],
+    "button text": ["Buy Health Potion (10 gold)", "Buy weapon (30 gold)", "Go to town square"],
     "button functions": [buyHealth, buyWeapon, goTown],
     text: "You enter the store."
   },
@@ -73,7 +74,7 @@ const locations = [
     name: "cave",
     "button text": ["Fight slime", "Fight fanged beast", "Go to town square"],
     "button functions": [fightSlime, fightBeast, goTown],
-    text: "You enter the cave. You see some monsters."
+    text: "You enter the cave. You see some monsters minding their own business."
   },
   {
     name: "fight",
@@ -103,15 +104,16 @@ const locations = [
     name: "easter egg",
     "button text": ["2", "8", "Go to town square?"],
     "button functions": [pickTwo, pickEight, goTown],
-    text: "You find a secret room and stumble upon a game on the table. You feel a sudden urge to pick a number above. Ten numbers will be randomly chosen between 0 and 10. If the number you choose matches one of the random numbers, you win!"
+    text: "You find a secret room and stumble upon several 10 sided-dice on a table. You see a floating ghost who tells you to pick the number 2 or 8. The ghost says it will randomly roll ten dices and if the number you choose matches one of the random numbers, you will be rewarded!"
   }
 ];
 
-// initialize buttons
+//Initialize buttons
 button1.onclick = goStore;
 button2.onclick = goCave;
 button3.onclick = fightDragon;
 
+//Update buttons
 function update(location) {
   monsterStats.style.display = "none";
   button1.innerText = location["button text"][0];
@@ -123,18 +125,21 @@ function update(location) {
   text.innerText = location.text;
 }
 
+//Sets knight to origin
 function refreshKnight() {
   knightImg.style.margin = "15em auto";
   knightImg.style.backgroundPosition = "top 0 bottom 0 left 0 right 0";
   knightImg.style.padding = "0";
 }
 
+//Sets other character to origin
 function refreshOther() {
   otherImg.style.margin = "-25em auto";
   otherImg.style.backgroundPosition = "top 0 bottom 0 left 0 right 0";
   otherImg.style.padding = "0";
 }
 
+//Go to town
 function goTown() {
   update(locations[0]);
   clearDodge();
@@ -148,23 +153,43 @@ function goTown() {
   }
 }
 
+//Go to store
 function goStore() {
   update(locations[1]);
   refreshKnight()
   refreshOther();
   shopKeeper();
-
   backgroundImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/shop.jpg')";
-  knightImg.style.marginLeft = "7.5em";
-  knightImg.style.marginTop = "18em";
+  knightImg.style.marginLeft = "5em";
+  knightImg.style.marginTop = "19em";
 }
 
+//Unique location for shopkeeper
 function shopKeeper() {
   otherImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/shopekeeper.png')";
   otherImg.style.display = "block";
   otherImg.style.marginRight = "5.5em";
+  otherImg.style.marginTop = "-26.5em";
+  //dialoge
+  let textArray = [
+    'Hey there',
+    'Need something?',
+    'Some may call this junk',
+    'You need iron or steel?',
+    'Everything\'s for sale',
+    'I used to be a traveler like you',
+    'Call me Jacky Ironforge'
+  ];
+  let randomNumber = Math.floor(Math.random()*textArray.length);
+
+  otherDmg.innerText = textArray[randomNumber];
+  otherDmg.style.display = "block";
+  otherDmg.style.fontSize = "10px";
+  otherDmg.style.lineHeight = "10px";
+  otherDmg.style.color = "#FFFFFF";
 }
 
+//Go to cave
 function goCave() {
   update(locations[2]);
   refreshKnight()
@@ -174,17 +199,23 @@ function goCave() {
   knightImg.style.marginTop = "17em";
 }
 
+//Increase health
 function buyHealth() {
+  clearDmg();
   if (gold >= 10) {
     gold -= 10;
     health += 10;
     goldText.innerText = gold;
     healthText.innerText = health;
+    knightDmg.innerText = "+10 HP";
+    knightDmg.style.display = "block";
+    knightDmg.style.color = "#F50D37";
   } else {
     text.innerText = "You do not have enough gold to buy health.";
   }
 }
 
+//Buy weapon
 function buyWeapon() {
   if (currentWeapon < weapons.length - 1) {
     if (gold >= 30) {
@@ -195,19 +226,37 @@ function buyWeapon() {
       text.innerText = "You now have a " + newWeapon + ".";
       inventory.push(newWeapon);
       text.innerText += " In your inventory you have: " + inventory;
+      //shows dagger
       if (weapons[currentWeapon].name === "dagger") {
+        knightDmg.innerText = "+David's Dagger";
+        knightDmg.style.display = "block";
+        knightDmg.style.color = "#A2C6F5";
+        knightDmg.style.marginTop = "-2em";
+        knightDmg.style.float = "left";
         daggerimg.style.visibility = "visible";
         daggerimg2.style.visibility = "visible";
         console.log("dagger")
       }
+      //shows hammer
       if (weapons[currentWeapon].name === "claw hammer") {
         knightImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/knight2.png')";
+        knightDmg.innerText = "+Arthurian Claw Hammer";
+        knightDmg.style.display = "block";
+        knightDmg.style.color = "#A2C6F5";
+        knightDmg.style.marginTop = "-2em";
+        knightDmg.style.float = "left";
         clawimg.style.visibility = "visible";
         clawimg2.style.visibility = "visible";
         console.log("claw");
       }
+      //shows sword
       if (weapons[currentWeapon].name === "sword") {
         knightImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/knight3.png')";
+        knightDmg.innerText = "+Edgar's Sword";
+        knightDmg.style.display = "block";
+        knightDmg.style.color = "#A2C6F5";
+        knightDmg.style.marginTop = "-2em";
+        knightDmg.style.float = "left";
         swordimg.style.visibility = "visible";
         swordimg2.style.visibility = "visible";
         console.log("sword");
@@ -218,12 +267,12 @@ function buyWeapon() {
     }
   } else {
     text.innerText = "You already have the most powerful weapon!";
-    button2.innerText = "Sell weapon for 15 gold";
+    button2.innerText = "Sell weapon (15 gold)";
     button2.onclick = sellWeapon;
   }
 }
 
-
+//Sell weapon starting with stick
 function sellWeapon() {
   if (inventory.length > 1) {
     gold += 15;
@@ -231,29 +280,46 @@ function sellWeapon() {
     let currentWeapon = inventory.shift();
     text.innerText = "You sold a " + currentWeapon + ".";
     text.innerText += " In your inventory you have: " + inventory;
+    //removes stick
     if (currentWeapon === "stick") {
+      knightDmg.innerText = "-Stick from Jordan";
+      knightDmg.style.display = "block";
+      knightDmg.style.color = "#A2C6F5";
+      knightDmg.style.marginTop = "-2em";
+      knightDmg.style.float = "left";
       stickimg.style.visibility = "hidden";
       stickimg2.style.visibility = "hidden";
       console.log("sell stick")
     }
+    //removes dagger
     if (currentWeapon === "dagger") {
+      knightDmg.innerText = "-David's Dagger";
+      knightDmg.style.display = "block";
+      knightDmg.style.color = "#A2C6F5";
+      knightDmg.style.marginTop = "-2em";
+      knightDmg.style.float = "left";
       daggerimg.style.visibility = "hidden";
       daggerimg2.style.visibility = "hidden";
       console.log("sell dagger")
     }
-
+    //removes hammer
     if (currentWeapon === "claw hammer") {
+      knightDmg.innerText = "-Arthurian Claw Hammer";
+      knightDmg.style.display = "block";
+      knightDmg.style.color = "#A2C6F5";
+      knightDmg.style.marginTop = "-2em";
+      knightDmg.style.float = "left";
       clawimg.style.visibility = "hidden";
       clawimg2.style.visibility = "hidden";
-      console.log("sell dagger")
+      console.log("sell claw hammer")
     }
-
   }
   else {
     text.innerText = "Don't sell your only weapon!";
   }
 }
 
+//Starts fight with slime
 function fightSlime() {
   fighting = 0;
   goFight();
@@ -261,13 +327,13 @@ function fightSlime() {
   refreshOther();
   knightImg.style.marginLeft = "5em";
   knightImg.style.marginTop = "6.3em";
-
   otherImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/slime.png')";
   otherImg.style.display = "block";
   otherImg.style.marginTop = "-24em";
   otherImg.style.marginRight = "5.5em";
 }
 
+//Starts fight with beast
 function fightBeast() {
   fighting = 1;
   goFight();
@@ -283,6 +349,7 @@ function fightBeast() {
   otherImg.style.padding = "3em";
 }
 
+//Starts fight with dragon
 function fightDragon() {
   fighting = 2;
   goFight();
@@ -299,6 +366,7 @@ function fightDragon() {
   otherImg.style.marginLeft = "9em";
 }
 
+//Updates location
 function goFight() {
   update(locations[3]);
   monsterHealth = monsters[fighting].health;
@@ -307,7 +375,9 @@ function goFight() {
   monsterHealthText.innerText = monsterHealth;
 }
 
+//Fight mechanic
 function attack() {
+  clearDmg();
   clearDodge();
   text.innerText = "The " + monsters[fighting].name + " attacks.";
   text.innerText += " You attack it with your " + weapons[currentWeapon].name + ".";
@@ -315,6 +385,7 @@ function attack() {
   health -= val;
   knightDmg.innerText = "-" + val;
   knightDmg.style.display = "block";
+  //checks if there is a enemy hit
   if (isMonsterHit()) {
     let val = weapons[currentWeapon].power + Math.floor(Math.random() * xp) + 1;
     monsterHealth -= val;
@@ -332,20 +403,24 @@ function attack() {
   } else if (monsterHealth <= 0) {
     fighting === 2 ? winGame() : defeatMonster();
   }
+  //broken weapon mechanic
   if (Math.random() <= .1 && inventory.length !== 1) {
     let brokenWeapon = inventory.pop();
     text.innerText += " Your " + brokenWeapon + " breaks.";
     currentWeapon--;
+    //broken dagger
     if (brokenWeapon === "dagger") {
       daggerimg.style.visibility = "hidden";
       daggerimg2.style.visibility = "hidden";
       console.log("broken dagger")
     }
+    //broken hammer
     if (brokenWeapon === "claw hammer") {
       clawimg.style.visibility = "hidden";
       clawimg2.style.visibility = "hidden";
       console.log("broken dagger")
     }
+    //borken sword
     if (brokenWeapon === "sword") {
       swordimg.style.visibility = "hidden";
       swordimg2.style.visibility = "hidden";
@@ -354,23 +429,31 @@ function attack() {
   }
 }
 
+//resets characters
 function clearDmg() {
+  knightDmg.style.marginTop = "2em";
+  knightDmg.style.float = "none";
   knightDmg.style.display = "none";
   otherDmg.style.display = "none";
   knightDmg.style.color = "#F50D37";
   otherDmg.style.color = "#F50D37";
+  otherDmg.style.marginLeft = "5em";
+  otherDmg.style.fontSize = "18px";
 }
 
+//Calculates enemy damage
 function getMonsterAttackValue(level) {
   const hit = (level * 5) - (Math.floor(Math.random() * xp));
   console.log(hit);
   return hit > 0 ? hit : 0;
 }
 
+//Calculates chance of enemy hit
 function isMonsterHit() {
   return Math.random() > .2 || health < 20;
 }
 
+//Dodge function
 function dodge() {
   clearDmg()
   dodgeMiss.style.marginLeft = "-100px";
@@ -378,6 +461,7 @@ function dodge() {
   text.innerText = "You dodge the attack from the " + monsters[fighting].name;
 }
 
+//Reset dodge
 function clearDodge() {
   dodgeMiss.style.display = "none";
 }
@@ -385,21 +469,22 @@ function clearDodge() {
 //Miss mechanic
 const dodgeMiss = document.querySelector("#miss");
 const dodgeInterval = 0.25;
-
 for(let i = 1; i < dodgeMiss.length; i++){
   dodgeMiss[i].style.animationDelay = i * dodgeInterval + "s";
 }
-
+//display miss text
 function miss() {
   otherDmg.style.display = "none";
   dodgeMiss.style.display = "block";
 }
 
+//Defeated enemy
 function defeatMonster() {
   let goldIncome = Math.floor(monsters[fighting].level * 6.7);
   gold += goldIncome;
   let xpIncome = monsters[fighting].level;
   xp += xpIncome;
+  //shows text
   goldText.innerText = gold;
   xpText.innerText = xp;
   knightDmg.style.color = "#A2C6F5";
@@ -409,18 +494,22 @@ function defeatMonster() {
   update(locations[4]);
 }
 
+//Darken screen
 function lose() {
   clearDodge();
   update(locations[5]);
   backgroundImg.style.opacity = 0.7;
 }
 
+//You won!
 function winGame() {
   clearDodge();
   update(locations[6]);
   clearDmg();
+  endGame();
 }
 
+//Restart mechanic to everything back to the beginning
 function restart() {
   xp = 0;
   health = 100;
@@ -443,8 +532,10 @@ function restart() {
     swordimg2.style.visibility = "hidden";
     stickimg.style.visibility = "visible";
     stickimg2.style.visibility = "visible";
+
 }
 
+//Hidden room
 function easterEgg() {
   update(locations[7]);
   backgroundImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/easterEgg.png')";
@@ -453,7 +544,26 @@ function easterEgg() {
   refreshOther();
   knightImg.style.marginTop = "13em";
   knightImg.style.marginRight = "15em";
-  otherImg.style.display = "none";
+  otherImg.style.backgroundImage = "url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/ghost.png')";
+  otherImg.style.marginRight = "1em";
+  otherImg.style.marginTop = "-27em";
+  otherImg.style.display = "block";
+  otherDmg.style.fontSize = "10px";
+  otherDmg.style.lineHeight = "10px";
+  otherDmg.style.color = "#FFFFFF";
+
+  let textArray = [
+    'Want to play?',
+    'Choose wisely',
+    'If you die, you take my place',
+    'Feeling lucky?',
+    'They used to call me Sir Jaivard the Valiant',
+    'What day is it?'
+  ];
+  let randomNumber = Math.floor(Math.random()*textArray.length);
+
+  otherDmg.innerText = textArray[randomNumber];
+  otherDmg.style.display = "block";
 }
 
 function pickTwo() {
@@ -464,6 +574,7 @@ function pickEight() {
   pick(8);
 }
 
+//easter egg game
 function pick(guess) {
   const numbers = [];
   while (numbers.length < 10) {
@@ -474,15 +585,160 @@ function pick(guess) {
     text.innerText += numbers[i] + "\n";
   }
   if (numbers.includes(guess)) {
-    text.innerText += "Right! You win 20 gold!";
+    text.innerText += "Right! You win 20 gold! Want to risk it again?";
     gold += 20;
     goldText.innerText = gold;
   } else {
-    text.innerText += "Wrong! You lose 10 health!";
+    text.innerText += "Wrong! You lose 10 health! Want to risk it again?";
     health -= 10;
     healthText.innerText = health;
     if (health <= 0) {
       lose();
     }
   }
+}
+
+//Canvas fireworks
+function endGame(){
+const canvas = document.getElementById('fireworks');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth * window.devicePixelRatio;
+canvas.height = window.innerHeight * window.devicePixelRatio;
+canvas.style.width = `${window.innerWidth}px`;
+canvas.style.height = `${window.innerHeight}px`;
+
+ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+const colors = [
+  {r: 255, g: 0, b: 0},
+  {r: 0, g: 0, b: 255},
+  {r: 255, g: 255, b: 255},
+  {r: 138,g: 43,b: 226 },
+  {r:210,g: 105,b: 30},
+  {r:100,g: 149,b: 237},
+];
+
+class Firework {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.counter = 0;
+        this.sparks = [];
+        this.trail = [];
+    }
+    draw() {
+        this.counter++;
+
+        // Draw the rocket
+        if (this.counter < 80) {
+            ctx.beginPath();
+            ctx.arc(this.x, canvas.height/window.devicePixelRatio - this.counter * 2, 0, 0, 2);
+            ctx.fillStyle = `rgb(${this.color.r}, ${this.color.g}, ${this.color.b})`;
+            ctx.fill();
+
+            this.trail.push({x: this.x, y: canvas.height/window.devicePixelRatio - this.counter * 5});
+
+            // Draw the trail
+            ctx.beginPath();
+            ctx.moveTo(this.trail[0].x, this.trail[0].y);
+            for (let i = 1; i < this.trail.length; i++) {
+                ctx.lineTo(this.trail[i].x, this.trail[i].y);
+                ctx.strokeStyle = `rgb(${this.color.r}, ${this.color.g}, ${this.color.b})`;
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+            }
+
+            // Remove older parts of the trail
+            if (this.trail.length > 8) {
+                this.trail.shift();
+            }
+        }
+
+        // Explode the firework
+        else if (this.sparks.length === 0) {
+            for (let i = 0; i < 70; i++) { // increase the number of sparks
+                this.sparks.push(new Spark(this.x, canvas.height/window.devicePixelRatio - this.counter * 5, this.color));
+            }
+        }
+
+        // Draw the explosion
+        else {
+            for (let i = 0; i < this.sparks.length; i++) {
+                let spark = this.sparks[i];
+                spark.draw();
+                spark.update();
+                if (spark.opacity <= 0) {
+                    this.sparks.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+    }
+}
+
+
+class Spark {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.speed = Math.random() * 5 + 1;
+        this.angle = Math.random() * Math.PI * 2;
+        this.color = color;
+        this.opacity = 1;
+        this.lightRadius = 1;
+        this.lightOpacity = 1;
+    }
+
+    draw() {
+        // Draw the light effect
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.lightRadius, 0.03, Math.PI * 2);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.opacity})`;
+        ctx.fill();
+        this.lightRadius += 0.09;
+        this.lightOpacity *= 2;
+
+        // Update the opacity for flickering effect
+        this.opacity = this.opacity <= 0.8 ? Math.random() * 0.8 : this.opacity - 0.5;
+
+        ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.opacity})`;
+        ctx.fillRect(this.x, this.y, 0.2, 0.2);
+    }
+
+    update() {
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+        this.opacity -= 0.008;
+    }
+}
+
+let fireworks = [];
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width/window.devicePixelRatio, canvas.height/window.devicePixelRatio);
+
+    for (let i = 0; i < fireworks.length; i++) {
+        fireworks[i].draw();
+    }
+
+    requestAnimationFrame(animate);
+
+
+    //Add text in the middle of screen
+    let fontSize = 30;
+    ctx.font = `30px Pixelify Sans`;
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("You Won!", canvas.width/2/window.devicePixelRatio, canvas.height/2/window.devicePixelRatio);
+}
+
+animate();
+
+setInterval(function () {
+    let x = Math.random() * canvas.width/window.devicePixelRatio;
+    let color = colors[Math.floor(Math.random() * colors.length)];
+    fireworks.push(new Firework(x, canvas.height/window.devicePixelRatio, color));
+}, 1000);
 }
