@@ -1,6 +1,7 @@
+/* Updated 01/2024 */
 body {
   background-color: #663333;
-  font-family: 'PressStart2PRegular';
+  font-family: 'Press Start 2P', 'Pixelify Sans';
   font-weight: normal;
   font-style: normal;
 }
@@ -53,6 +54,7 @@ button {
   border: 3px solid #feac32;
 }
 
+/* Images */
 
 #knight {
   width: 192px;
@@ -85,20 +87,22 @@ button {
   padding: 10px;
 }
 
+/* Miss and Overlay Text */
+
 #knightDmg {
-    margin-left: 2em;
+    margin-left: 3em;
 }
 
 #otherDmg {
-    margin-left: 3em;
+    margin-left: 5em;
 }
 
 .dmg {
   color: #F50D37;
   text-shadow: 2px 2px #292525;
-  font-size: 30px;
-  font-family: fantasy;
+  font-size: 18px;
   display:none;
+  width: 100%;
 }
 
 .menu-item:hover:after {
@@ -159,6 +163,7 @@ button {
   top:50%;
   left:50%;
   transform:translate3d(-50%,-50%,0);
+  margin-top: -8em;
 
   font-family: 'Bitter', serif;
   animation: text-pop-up-top 2.5s 3 both  alternate;
@@ -182,7 +187,7 @@ button {
 }
 
 
-
+/* Inventory */
 .menu-item,
 .menu-open-button {
    background: #E04828;
@@ -266,11 +271,6 @@ button {
    font-size: 26px;
 }
 
-
-/* .menu-item {
-   transition: all 0.1s ease 0s;
-} */
-
 .menu-item:hover {
   cursor: default;
 }
@@ -338,7 +338,7 @@ button {
 .blue {
   visibility: hidden;
    background-color: #669AE1;
-   background-image: url('./sword.png');
+   background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/sword.png');
    background-size: 40px;
    background-position: center;
    background-repeat: no-repeat;
@@ -353,7 +353,7 @@ button {
 
 .purple {
    background-color: #C49CDE;
-   background-image: url('./stick.png');
+   background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/stick.png');
    background-size: 40px;
    background-position: center;
    background-repeat: no-repeat;
@@ -369,7 +369,7 @@ button {
 .orange {
   visibility: hidden;
    background-color: #FC913A;
-   background-image: url('./dagger.png');
+   background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/dagger.png');
    background-size: 40px;
    background-position: center;
    background-repeat: no-repeat;
@@ -385,7 +385,7 @@ button {
 .lightblue {
   visibility: hidden;
    background-color: #62C2E4;
-   background-image: url('./claw-hammer.png');
+   background-image: url('https://raw.githubusercontent.com/Edgrrrcia/jsRPG.github.io/main/claw-hammer.png');
    background-size: 40px;
    background-position: center;
    background-repeat: no-repeat;
@@ -396,4 +396,8 @@ button {
 .lightblue:hover {
    color: #62C2E4;
    text-shadow: none;
+}
+
+#fireworks {
+  margin-top: -300em;
 }
