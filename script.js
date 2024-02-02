@@ -505,10 +505,10 @@ function defeatMonster() {
   //shows text
   goldText.innerText = gold;
   xpText.innerText = xp;
-  knightDmg.style.color = "#A2C6F5";
-  knightDmg.innerText = "+" + goldIncome + " xp";
-  otherDmg.style.color = "#F2D83D";
-  otherDmg.innerText = "+" + xpIncome + " gold";
+  knightDmg.style.color = "#F2D83D";
+  knightDmg.innerText = "+" + goldIncome + " gold";
+  otherDmg.style.color = "#A2C6F5";
+  otherDmg.innerText = "+" + xpIncome + " xp";
   update(locations[4]);
 }
 
