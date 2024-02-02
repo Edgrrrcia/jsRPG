@@ -64,6 +64,8 @@ button {
   background-position: center;
   background-repeat: no-repeat;
   margin: 15em auto;
+  opacity: 1;
+  transition: opacity 3s ease; /* Transition duration and timing function */
 }
 
 #other {
@@ -75,6 +77,8 @@ button {
   background-position: center;
   background-repeat: no-repeat;
   margin: -25em auto;
+  opacity: 1;
+  transition: opacity 7s ease; /* Transition duration and timing function */
 }
 
 #background {
@@ -160,10 +164,9 @@ button {
 
 #miss{
   position: absolute;
-  top:50%;
-  left:50%;
   transform:translate3d(-50%,-50%,0);
-  margin-top: -8em;
+  margin-top: 8em;
+  margin-left: 10em;
 
   font-family: 'Bitter', serif;
   animation: text-pop-up-top 2.5s 3 both  alternate;
@@ -259,8 +262,9 @@ button {
 
 .menu {
    margin: auto;
-   position: absolute;
-   top: .5em;
+   margin-top: 20em;
+   position: fixed;
+   top: -5em;
    bottom: 0;
    left: 16em;
    right: 0;
@@ -399,5 +403,9 @@ button {
 }
 
 #fireworks {
-  margin-top: -300em;
+  margin-top: -50em;
+}
+
+.firework {
+  display: none;
 }
