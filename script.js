@@ -1,7 +1,7 @@
 //Starter stats
 let xp = 0;
-let health = 100;
-let gold = 20;
+let health = 10000;
+let gold = 2000;
 let currentWeapon = 0;
 let fighting;
 let monsterHealth;
@@ -23,6 +23,8 @@ const otherDmg = document.querySelector("#otherDmg");
 const monsterStats = document.querySelector("#monsterStats");
 const monsterName = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
+const canvas = document.getElementById('fireworks');
+const firework = document.querySelector('.firework');
 const weapons = [
   { name: 'stick', power: 5 },
   { name: 'dagger', power: 30 },
@@ -130,6 +132,7 @@ function refreshKnight() {
   knightImg.style.margin = "15em auto";
   knightImg.style.backgroundPosition = "top 0 bottom 0 left 0 right 0";
   knightImg.style.padding = "0";
+  knightImg.style.opacity = "1";
 }
 
 //Sets other character to origin
@@ -137,6 +140,7 @@ function refreshOther() {
   otherImg.style.margin = "-25em auto";
   otherImg.style.backgroundPosition = "top 0 bottom 0 left 0 right 0";
   otherImg.style.padding = "0";
+  otherImg.style.opacity = "1";
 }
 
 //Go to town
@@ -393,7 +397,6 @@ function attack() {
     otherDmg.style.display = "block";
   } else {
     miss();
-    dodgeMiss.style.marginLeft = "50px";
     text.innerText += " You miss.";
   }
   healthText.innerText = health;
@@ -456,7 +459,7 @@ function isMonsterHit() {
 //Dodge function
 function dodge() {
   clearDmg()
-  dodgeMiss.style.marginLeft = "-100px";
+  dodgeMiss.style.marginLeft = "5em";
   miss();
   text.innerText = "You dodge the attack from the " + monsters[fighting].name;
 }
@@ -464,6 +467,8 @@ function dodge() {
 //Reset dodge
 function clearDodge() {
   dodgeMiss.style.display = "none";
+  dodgeMiss.style.marginLeft = "10em";
+  dodgeMiss.style.marginTop = "8em";
 }
 
 //Miss mechanic
@@ -472,10 +477,23 @@ const dodgeInterval = 0.25;
 for(let i = 1; i < dodgeMiss.length; i++){
   dodgeMiss[i].style.animationDelay = i * dodgeInterval + "s";
 }
+
 //display miss text
 function miss() {
   otherDmg.style.display = "none";
   dodgeMiss.style.display = "block";
+}
+
+// Function to fade image of enemy
+function fadeOther() {
+  otherImg.style.opacity = 0;
+  setInterval(fadeBackground, 3000);
+}
+
+// Function to fade image of enemy
+function fadeKnight() {
+  knightImg.style.opacity = 0;
+  setInterval(fadeBackground, 7000);
 }
 
 //Defeated enemy
@@ -499,6 +517,7 @@ function lose() {
   clearDodge();
   update(locations[5]);
   backgroundImg.style.opacity = 0.7;
+  fadeKnight();
 }
 
 //You won!
@@ -507,6 +526,7 @@ function winGame() {
   update(locations[6]);
   clearDmg();
   endGame();
+  fadeOther();
 }
 
 //Restart mechanic to everything back to the beginning
@@ -532,7 +552,8 @@ function restart() {
     swordimg2.style.visibility = "hidden";
     stickimg.style.visibility = "visible";
     stickimg2.style.visibility = "visible";
-
+  endGame(false);
+  firework.style.display = "none";
 }
 
 //Hidden room
@@ -600,8 +621,8 @@ function pick(guess) {
 
 //Canvas fireworks
 function endGame(){
-const canvas = document.getElementById('fireworks');
 const ctx = canvas.getContext('2d');
+firework.style.display = "block";
 canvas.width = window.innerWidth * window.devicePixelRatio;
 canvas.height = window.innerHeight * window.devicePixelRatio;
 canvas.style.width = `${window.innerWidth}px`;
@@ -733,6 +754,7 @@ function animate() {
     ctx.textAlign = "center";
     ctx.fillText("You Won!", canvas.width/2/window.devicePixelRatio, canvas.height/2/window.devicePixelRatio);
 }
+
 
 animate();
 
